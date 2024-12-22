@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 N = 20  # Lattice size N x N
 q = 3   # Number of states in Potts model
 T_range = [2.0]  # Temperatures
-h_range = np.linspace(-1.0, 1.0, 100)  # Range of h values
+#h_range = np.linspace(-1.0, 1.0, 100)  # Range of h values
+h_range = [0]
 equil_steps = 5000  # Number of equilibration steps
 mc_steps = 5000   # Number of Monte Carlo steps
 
