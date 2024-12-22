@@ -1,5 +1,6 @@
 import numpy as np
 from euler_maruyama import *
+import matplotlib.pyplot as plt
 
 x_0 = np.array([1,0])
 
