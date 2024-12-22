@@ -54,7 +54,7 @@ def metropolis_step_optimized(lattice, beta, energy):
     return lattice, energy
 
 
-def simulate_potts(N, q, T_range, equil_steps = 2000, steps = 2000):
+def simulate_potts(N, q, T_range, equil_steps = 5000, steps = 5000):
     """Simulate the 2D Potts model with optimized energy calculations."""
     internal_energies = []
     specific_heats = []
@@ -101,7 +101,7 @@ def simulate_potts(N, q, T_range, equil_steps = 2000, steps = 2000):
 # Parameters
 N = 20
 q = 3
-T_range = np.linspace(0.5, 3.0, 50)
+T_range = np.linspace(0.1, 2.0, 100)
 
 # Simulation
 internal_energies, specific_heats = simulate_potts(N, q, T_range)
@@ -128,5 +128,5 @@ plt.grid(True)
 # Save the figure
 plt.tight_layout()
 plt.savefig("potts_model_plots.png", dpi=300)
-plt.close()  # Close the figure after saving to free memory
+plt.show()  
 
