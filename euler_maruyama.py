@@ -1,4 +1,9 @@
+import argparse
 import numpy as np
+
+parser = argparse.ArgumentParser(description="Compute average exit time for varying epsilon.")
+parser.add_argument("--epsilon", type=float, default=1.0, help="Epsilon value")
+args = parser.parse_args()
 
 def grad_V(x_tup):
   x = x_tup[0]
@@ -20,7 +25,7 @@ def simulate_exit_time(x_0, grad_V, epsilon, delta, dt):
 
     return t
 
-def compute_average_exit_time(x_0, grad_V, epsilon=1, delta=0.1, dt=0.01, iterations=1000):
+def compute_average_exit_time(x_0, grad_V, epsilon, delta=0.1, dt=0.01, iterations=1000):
     tau_list = []
 
     for _ in range(iterations):
@@ -32,7 +37,8 @@ def compute_average_exit_time(x_0, grad_V, epsilon=1, delta=0.1, dt=0.01, iterat
 
 
 x_0 = (1,0)
+epsilon = args.epsilon
 
-print(compute_average_exit_time(x_0, grad_V))
+print(compute_average_exit_time(x_0, grad_V, epsilon))
 
 
