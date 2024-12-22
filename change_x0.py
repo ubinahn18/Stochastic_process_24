@@ -2,7 +2,7 @@ import numpy as np
 from euler_maruyama import *
 import matplotlib.pyplot as plt
 
-initial_x_coords = np.arange(-1.6, 0.2, 1.6)
+initial_x_coords = np.arange(-1.6, 1.6, 0.2)
 
 epsilon = 1.0
 taus = []
@@ -23,7 +23,7 @@ plt.savefig("initial_x_vs_exit_time.png", dpi=300, bbox_inches="tight")
 plt.show()
 
 
-initial_y_coords = np.arange(-1.0, 0.2, 1.0)
+initial_y_coords = np.arange(-1.0, 1.0, 0.2)
 
 taus = []
 for y_coord in initial_y_coords:
