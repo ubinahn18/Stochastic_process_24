@@ -54,7 +54,7 @@ def metropolis_step_optimized(lattice, beta, energy):
     return lattice, energy
 
 
-def simulate_potts(N, q, T_range, equil_steps, steps):
+def simulate_potts(N, q, T_range, equil_steps = 2000, steps = 2000):
     """Simulate the 2D Potts model with optimized energy calculations."""
     internal_energies = []
     specific_heats = []
