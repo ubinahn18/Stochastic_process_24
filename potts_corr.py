@@ -35,7 +35,7 @@ def metropolis_update(lattice, beta, h, magnetization):
     
     # Interaction term (delta(s_i, s_j)) is 1 if spins are the same, 0 otherwise
     for neighbor in neighbors:
-        delta_energy += (current_spin != neighbor) - (new_spin != neighbor)
+        delta_energy += int((new_spin != neighbor)) - int((current_spin != neighbor))
     
     # External field term
     delta_energy += (current_spin - new_spin) * h
