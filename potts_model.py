@@ -42,9 +42,9 @@ def metropolis_step_optimized(lattice, beta, energy):
         lattice[x, (y + 1) % N]   # Right
     ]
     
-   delta_energy = 0
-for neighbor in neighbors:
-    delta_energy += int(new_spin != neighbor) - int(current_spin != neighbor)
+    delta_energy = 0
+    for neighbor in neighbors:
+        delta_energy += int(new_spin != neighbor) - int(current_spin != neighbor)
 
     
     # Metropolis acceptance criterion
