@@ -1,5 +1,5 @@
 import numpy as np
-from eulereuler_maruyama import *
+from euler_maruyama import *
 
 x_0 = np.array([1,0])
 
