@@ -6,7 +6,11 @@ x_0 = np.array([1,0])
 
 epsilons = np.arange(1.0, 4.0, 0.1)
 
-taus = [compute_average_exit_time(x_0, grad_V, epsilon) for epsilon in epsilons]
+taus = []
+for epsilon in epsilons:
+    tau = compute_average_exit_time(x_0, grad_V, epsilon)
+    taus.append(tau)
+    print(f"Epsilon: {epsilon:.1f}, Tau: {tau}")
 
 # Plot epsilon vs. tau
 
