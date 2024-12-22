@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Parameters
-N = 20  # Lattice size N x N
+N = 40  # Lattice size N x N
 q = 3   # Number of states in Potts model
 T_range = [2.0]  # Temperatures
 #h_range = np.linspace(-1.0, 1.0, 100)  # Range of h values
