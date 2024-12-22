@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 x_0 = np.array([1,0])
 
-epsilons = np.arange(1.0, 50.0, 1.0)
+epsilons = np.arange(0.02, 1.0, 0.02)
 
 taus = []
 for epsilon in epsilons:
