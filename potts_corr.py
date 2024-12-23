@@ -107,7 +107,12 @@ def exponential_function(k, Gamma_0, xi):
 T_range = [0.5, 1.0, 1.5, 2.0, 2.5]
 h_range = np.linspace(-1.0, 1.0, 100)
 
-output_directory = r'C:/Users/Ubin/Desktop/Stochastic_process_results'
+output_directory = r'Stochastic_process_results'
+
+# Ensure the output directory exists
+import os
+if not os.path.exists(output_directory):
+    os.makedirs(output_directory)
 
 magnetizations_dict = {T: [] for T in T_range}
 
