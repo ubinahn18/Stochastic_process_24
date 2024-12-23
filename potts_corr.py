@@ -105,7 +105,7 @@ def exponential_function(k, Gamma_0, xi):
     return Gamma_0 * np.exp(-k / xi)
 
 T_range = [0.5, 1.0, 1.5, 2.0, 2.5]
-h_range = np.linspace(-1.0, 1.0, 100)
+h_range = np.linspace(0.0, 2.0, 100)
 
 output_directory = r'Stochastic_process_results'
 
@@ -163,7 +163,7 @@ for T in T_range:
     # Fit the exponential function
     params, covariance = curve_fit(
         exponential_function, 
-        range(1, N//2),
+        np.arange(1, N//2),
         correlation_function[1:],
         p0=(1, 1)
     )
