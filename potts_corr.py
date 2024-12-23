@@ -1,12 +1,11 @@
 import numpy as np
+from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
 # Parameters
 N = 40  # Lattice size N x N
 q = 3   # Number of states in Potts model
-T_range = [2.0]  # Temperatures
-#h_range = np.linspace(-1.0, 1.0, 100)  # Range of h values
-h_range = [0]
+
 equil_steps = 5000  # Number of equilibration steps
 mc_steps = 5000   # Number of Monte Carlo steps
 
@@ -50,27 +49,24 @@ def metropolis_update(lattice, beta, h, magnetization):
     
     return lattice, magnetization
 
-# Run Monte Carlo simulation for a specific temperature and h
+
 def run_simulation(N, T, h, equil_steps, mc_steps):
     lattice = initialize_lattice(N)
     beta = 1 / T
     magnetization = compute_magnetization(lattice)
     
-    # Store samples for correlation function calculation
     samples = []
     
-    # Equilibrate the system
     for _ in range(equil_steps):
         lattice, magnetization = metropolis_update(lattice, beta, h, magnetization)
     
-    # Collect data for magnetization and correlation function
     for _ in range(mc_steps):
         lattice, magnetization = metropolis_update(lattice, beta, h, magnetization)
         samples.append(lattice.copy())
     
     return np.mean(magnetization), samples
 
-# Compute correlation function C(i,j)
+
 def compute_correlation(samples, N):
     # Flatten lattice into 1D for each sample
     flat_samples = np.array([sample.flatten() for sample in samples])
@@ -83,13 +79,13 @@ def compute_correlation(samples, N):
     
     return C
 
-# Compute the spatial correlation function for distance k
+
 def compute_spatial_correlation(C, N, k):
     correlation_function = 0
     
     # Iterate over all sites (i)
     for i in range(N**2):
-        # Calculate horizontal and vertical neighbors at distance k
+        
         # Horizontal neighbors
         ni = (i + k) % (N**2)  # Right (periodic boundary)
         nj = (i - k) % (N**2)  # Left (periodic boundary)
@@ -98,59 +94,82 @@ def compute_spatial_correlation(C, N, k):
         ni_vert = (i + k * N) % (N**2)  # Down (periodic boundary)
         nj_vert = (i - k * N) % (N**2)  # Up (periodic boundary)
         
-        # Add the correlation for these neighbors (horizontal and vertical)
         correlation_function += C[i, ni] + C[i, nj] + C[i, ni_vert] + C[i, nj_vert]
-    
-    # Normalize the correlation function by the number of pairs
+
     correlation_function /= (4*N**2)
     
     return correlation_function
 
-# Main loop: Compute magnetization and spatial correlation for different values of h and T
-magnetizations_dict = {T: [] for T in T_range}
-correlation_lengths = []
+# fit correlation function
+def exponential_function(k, Gamma_0, xi):
+    return Gamma_0 * np.exp(-k / xi)
 
-# Run for T = 1.5, 2.0, 2.5 for magnetization and spatial correlation function
+T_range = [0.5, 1.0, 1.5, 2.0, 2.5]
+h_range = np.linspace(-1.0, 1.0, 100)
+
+magnetizations_dict = {T: [] for T in T_range}
+
+# Run simulation
 for T in T_range:
-    # Magnetization vs h
+    print(f"Running simulation for T = {T}, Magnetization") 
     magnetizations_for_h = []
     for h in h_range:
         mag, samples = run_simulation(N, T, h, equil_steps, mc_steps)
-        print(f"Running simulation for T = {T}, h = {h}") 
         magnetizations_for_h.append(mag)
-        
-        # Compute correlation function for h = 0
-        if h == 0:
-            C = compute_correlation(samples, N)
-        
-            # Calculate spatial correlation for different k values
-            correlation_function = np.zeros(N//2)
-            for k in range(1, N//2):
-                correlation_function[k] = compute_spatial_correlation(C, N, k)
-        
-            print(f"Spatial correlation function for T = {T}, h = {h}: {correlation_function}")
-            
-            # Plot and save spatial correlation function
-            plt.plot(range(1, N//2), correlation_function[1:], marker='o', linestyle='-', color='r')
-            plt.title(f"Spatial Correlation Function (T={T}, h={h})")
-            plt.xlabel("Distance k")
-            plt.ylabel("Γ(k)")
-            plt.grid(True)
-            plt.savefig(f"correlation_function_T_{T}_h_{h}.png")
-            plt.clf()  # Clear the figure after saving
-    
     magnetizations_dict[T] = magnetizations_for_h
 
-# Plot magnetization vs h for each temperature and save each figure
+# Plot Magnetization
 for T in T_range:
     plt.plot(h_range, magnetizations_dict[T], label=f'T = {T}')
-    # Save each plot with a filename including the temperature
     plt.title(f"Magnetization vs. External Field (h) for T = {T}")
     plt.xlabel("External Field (h)")
     plt.ylabel("Magnetization")
     plt.legend()
     plt.grid(True)
+    output_directory = 'C:\Users\Ubin\Desktop\Stochastic_process_results'
+    plt.savefig(f"{output_directory}/magnetization_vs_h_T_{T}.png")
+    plt.clf()  
+
+
+# Correlation function
+T_range = np.linspace(0.1, 2.0, num=25)
+h = 0
+xi_fits = []
+output_directory = r'C:\Users\Ubin\Desktop\Stochastic_process_results'
+
+for T in T_range:
+    mag, samples = run_simulation(N, T, h, equil_steps, mc_steps)
+    print(f"Running simulation for T = {T}, Correlation") 
+    C = compute_correlation(samples, N)
+    correlation_function = np.zeros(N//2)
+    for k in range(1, N//2):
+        correlation_function[k] = compute_spatial_correlation(C, N, k)
     
-    # Save the figure
-    plt.savefig(f"magnetization_vs_h_T_{T}.png")
-    plt.clf()  # Clear the figure after saving
+    # Plot correlation function for the first T
+    if np.isclose(T, T_range[0]):
+        plt.plot(range(1, N//2), correlation_function[1:], marker='o', linestyle='-', color='r')
+        plt.title(f"Spatial Correlation Function (T={T}, h={h})")
+        plt.xlabel("Distance k")
+        plt.ylabel("Γ(k)")
+        plt.grid(True)
+        plt.savefig(f"{output_directory}/correlation_function_T_{T}_h_{h}.png")
+        plt.clf()  
+
+    # Fit the exponential function
+    params, covariance = curve_fit(
+        exponential_function, 
+        range(1, N//2),
+        correlation_function[1:],
+        p0=(1, 1)
+    )
+    Gamma_0_fit, xi_fit = params
+    xi_fits.append(xi_fit)
+
+# Plot T vs xi
+plt.plot(T_range, xi_fits, marker='o', linestyle='-', label='ξ')
+plt.title("Correlation Length (ξ) vs. Temperature (T)")
+plt.xlabel("Temperature (T)")
+plt.ylabel("Correlation Length (ξ)")
+plt.grid(True)
+plt.savefig(f"{output_directory}/T_vs_xi.png")
+plt.clf()
