@@ -126,19 +126,22 @@ for T in T_range:
     magnetizations_dict[T] = magnetizations_for_h
 
 # Plot Magnetization
+plt.figure(figsize=(10, 6))  # Optional: Adjust the figure size
+
 for T in T_range:
     plt.plot(h_range, magnetizations_dict[T], label=f'T = {T}')
-    plt.title(f"Magnetization vs. External Field (h) for T = {T}")
-    plt.xlabel("External Field (h)")
-    plt.ylabel("Magnetization")
-    plt.legend()
-    plt.grid(True)
-    plt.savefig(f"{output_directory}/magnetization_vs_h_T_{T}.png")
-    plt.clf()  
+
+plt.title("Magnetization vs. External Field (h) for Various Temperatures")
+plt.xlabel("External Field (h)")
+plt.ylabel("Magnetization")
+plt.legend(title="Temperatures")  # Add a title to the legend for clarity
+plt.grid(True)
+plt.savefig(f"{output_directory}/magnetization_vs_h_all_T.png")
+plt.clf()
 
 
 # Correlation function
-T_range = np.linspace(0.1, 2.0, num=25)
+T_range = np.linspace(0.1, 2.0, num=20)
 h = 0
 xi_fits = []
 
@@ -161,14 +164,13 @@ for T in T_range:
         plt.clf()  
 
     # Fit the exponential function
-    params, covariance = curve_fit(
-        exponential_function, 
-        np.arange(1, N//2),
-        correlation_function[1:],
-        p0=(1, 1)
-    )
-    Gamma_0_fit, xi_fit = params
+    k_values = np.arange(1, N//2)
+    log_correlation = np.log(correlation_function[1:])
+
+    slope, intercept = np.polyfit(k_values, log_correlation, 1)
+    xi_fit = -1 / slope  # Since slope = -1/xi
     xi_fits.append(xi_fit)
+
 
 # Plot T vs xi
 plt.plot(T_range, xi_fits, marker='o', linestyle='-', label='ξ')
