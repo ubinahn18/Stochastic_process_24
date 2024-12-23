@@ -107,6 +107,8 @@ def exponential_function(k, Gamma_0, xi):
 T_range = [0.5, 1.0, 1.5, 2.0, 2.5]
 h_range = np.linspace(-1.0, 1.0, 100)
 
+output_directory = r'C:/Users/Ubin/Desktop/Stochastic_process_results'
+
 magnetizations_dict = {T: [] for T in T_range}
 
 # Run simulation
@@ -126,7 +128,6 @@ for T in T_range:
     plt.ylabel("Magnetization")
     plt.legend()
     plt.grid(True)
-    output_directory = 'C:\Users\Ubin\Desktop\Stochastic_process_results'
     plt.savefig(f"{output_directory}/magnetization_vs_h_T_{T}.png")
     plt.clf()  
 
@@ -135,7 +136,6 @@ for T in T_range:
 T_range = np.linspace(0.1, 2.0, num=25)
 h = 0
 xi_fits = []
-output_directory = r'C:\Users\Ubin\Desktop\Stochastic_process_results'
 
 for T in T_range:
     mag, samples = run_simulation(N, T, h, equil_steps, mc_steps)
