@@ -3,8 +3,8 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
 # Parameters
-N = 40  # Lattice size N x N
-q = 3   # Number of states in Potts model
+N = 16  # Lattice size N x N
+q = 10   # Number of states in Potts model
 
 equil_steps = 5000  # Number of equilibration steps
 mc_steps = 5000   # Number of Monte Carlo steps
