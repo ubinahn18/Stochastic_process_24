@@ -100,8 +100,8 @@ def simulate_potts(N, q, T_range, equil_steps = 5000, steps = 5000):
 
 
 # Parameters
-N = 60
-q = 3
+N = 16
+q = 10
 T_range = np.linspace(0.1, 2.0, 120)
 
 # Simulation
